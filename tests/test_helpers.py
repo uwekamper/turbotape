@@ -25,10 +25,10 @@ class TestSetOpsResource:
 
     def test_intersection(self):
         res = intersection([1, 2], [2, 3], [2, 4, 5])
-        self.assertEqual(1, len(res))
-        self.assertEqual(2, res[0])
+        assert 1 == len(res)
+        assert 2 == res[0]
 
     def test_union(self):
         res = union([1, 2], [2, 3], [2, 4, 5])
-        self.assertEqual(5, len(res))
-        self.assertEqual(1, res[0])
+        assert 5 == len(res)
+        assert 1 == res[0]

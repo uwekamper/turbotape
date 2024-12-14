@@ -27,24 +27,25 @@ class TestCategoryMediator:
 
     @pytest.fixture()
     def my_field(self, test_record) -> dict:
-        field = test_record['fields'][7]
+        field = test_record['fields'][2]
+        return field
 
     @pytest.fixture()
-    def my_mediatior(self) -> CategoryMediator:
+    def my_mediator(self) -> CategoryMediator:
         mediator = CategoryMediator()
         return mediator
 
-    def test_update_category_str(self, my_mediator):
-        value = 'Accepted'
-        res = my_mediator.update(self.field, value)
-        assert res == [
-            {'value': {
-                'status': 'active',
-                'text': 'Accepted',
-                'id': 2,
-                'color': 'DCEBD8'}
+    def test_update_category_str(self, my_field, my_mediator):
+        value = 'Complete'
+        res = my_mediator.update(my_field, value)
+        assert res == [{ "value": \
+            {
+              "id": 48993,
+              "text": "Complete",
+              "color": "00866A",
+              "means_completed": True
             }
-        ]
+        }]
 
     def test_fetch_category(self, my_mediator):
         assert \
