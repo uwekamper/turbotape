@@ -1,34 +1,42 @@
 import os
 import json
-from unittest import TestCase
 import datetime
+from pathlib import Path
 
-from tetrapod.items import (
+import pytest
+
+from turbotape.records import (
     fetch_field,
-    Item,
+    Record,
     CategoryMediator,
 )
 
 
-class ItemTestCase(TestCase):
-    """Abstract base class for anything that needs test_item.json to be tested."""
+@pytest.fixture
+def test_record():
+    """
+    Fixture for anything that needs test_record.json to be tested.
+    """
+    json_path = Path(__file__).parent / 'test_record.json'
+    with open(json_path, mode='r') as fh:
+        test_record = json.load(fh)
+        return test_record
 
-    def setUp(self):
-        super().setUp()
-        json_path = os.path.join(os.path.dirname(__file__), 'test_item.json')
-        with open(json_path, mode='r') as fh:
-            self.test_item = json.load(fh)
 
-class TestCategoryMediator(ItemTestCase):
+class TestCategoryMediator:
 
-    def setUp(self):
-        super().setUp()
-        self.field = self.test_item['fields'][7]
-        self.mediator = CategoryMediator()
+    @pytest.fixture
+    def my_field(test_record) -> dict:
+        field = test_record['fields'][7]
 
-    def test_update_category_str(self):
+    @pytest.fixture
+    def my_mediatior():
+        mediator = CategoryMediator()
+        return mediator
+
+    def test_update_category_str(self, my_mediator):
         value = 'Accepted'
-        res = self.mediator.update(self.field, value)
+        res = my_mediator.update(self.field, value)
         self.assertEqual(
             [{'value': {
                 'status': 'active',
@@ -39,35 +47,35 @@ class TestCategoryMediator(ItemTestCase):
             res
         )
 
-    def test_fetch_category(self):
+    def test_fetch_category(self, my_mediator):
         self.assertEqual(
             [(1, "Entered"), (2, "Accepted"), (3, "Rejected")],
-            self.mediator.fetch(self.field, field_param='choices')
+            my_mediator.fetch(self.field, field_param='choices')
         )
         self.assertEqual(
             "Accepted",
-            self.mediator.fetch(self.field)
+            my_mediator.fetch(self.field)
         )
         self.assertEqual(
             "Accepted",
-            self.mediator.fetch(self.field, field_param='active')['text']
+            my_mediator.fetch(self.field, field_param='active')['text']
         )
         self.assertEqual(
             2,
-            self.mediator.fetch(self.field, field_param='active')['id']
+            my_mediator.fetch(self.field, field_param='active')['id']
         )
         self.assertEqual(
             "DCEBD8",
-            self.mediator.fetch(self.field, field_param='active')['color']
+            my_mediator.fetch(self.field, field_param='active')['color']
         )
 
 
-    def test_as_podio_dict(self):
-        res = self.mediator.as_podio_dict(self.field)
+    def test_as_podio_dict(self, my_mediator):
+        res = my_mediator.as_podio_dict(self.field)
         self.assertEqual([2], res)
 
 
-class TestFetchField(ItemTestCase):
+class TestFetchField:
 
     def test_get_field_not_found(self):
         self.assertEqual(

@@ -14,9 +14,7 @@ classifiers = [
 ]
 dependencies = [
   'requests',
-  'requests-oauthlib',
   'python-dateutil',
-  'click'
 ]
 
 [project.urls]
@@ -26,3 +24,18 @@ Issues = "https://github.com/uwekamper/turbotape/issues"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.poetry]
+name = "turbotape"
+version = "0.0.1"
+description = "A utility package for using the public API of tapeapp.com with Python."
+authors = ["Uwe Kamper <me@uwekamper.de>"]
+readme = "README.md"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.2"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+requests = "^2.32.3"
+python-dateutil = "^2.9.0.post0"
