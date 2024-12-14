@@ -1,12 +1,28 @@
 import json
 import os
+from pathlib import Path
+
+import pytest
 
 from turbotape.helpers import (
+    upload_file,
     iterate_array,
     iterate_resource,
     intersection,
     union,
 )
+
+from turbotape.session import create_tape_session
+
+
+@pytest.mark.skip(reason="no way of automatically testing this")
+def test_upload_file():
+    test_file = Path(__file__).parent / 'test-image.png'
+    tape = create_tape_session()
+    with open(test_file, mode="rb") as fh:
+        raw_data = fh.read()
+        res = upload_file(tape, 127782851, 'files', raw_data, 'test-image.png')
+    print(res)
 
 
 class TestIterateArray:

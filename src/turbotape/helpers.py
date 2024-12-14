@@ -249,14 +249,21 @@ def load_complete_app(podio, app_id):
 
 def upload_file(tape_session, record_id, file_field, raw_data, new_file_name):
     log.info(f'Uploading and attaching file {new_file_name} to record {record_id}')
-    files = {'source': (new_file_name, raw_data, mimetypes.guess_type(new_file_name)[0])}
+    files = {'file': (new_file_name, raw_data, mimetypes.guess_type(new_file_name)[0])}
     data = {'filename': new_file_name.encode('utf-8')}
     upload_resp = tape_session.post('https://api.tapeapp.com/v1/file/upload', data=data, files=files)
     log.info(f"Upload response is: {upload_resp.status_code}, "
              f"content(-repr): {repr(upload_resp.content)}")
     upload_resp.raise_for_status()
     new_file_id = upload_resp.json()['file_id']
-    attach_resp = tape_session.post('https://api.podio.com/file/%d/attach' % new_file_id,
-                             json={'ref_type': 'item', 'ref_id': item_id})
+    payload = {
+        'fields': {
+            file_field: new_file_id
+        }
+    }
+    attach_resp = tape_session.put('https://api.tapeapp.com/v1/record/%d' % record_id, json=payload)
+    log.info(f"Attachment response is: {upload_resp.status_code}, "
+             f"content(-repr): {repr(upload_resp.content)}")
+    attach_resp.raise_for_status()
     log.info(f"Attach response is: {attach_resp.status_code}, "
              f"content(-repr): {repr(attach_resp.content)}")
