@@ -1,8 +1,20 @@
 import os
 import logging
 from requests import Session
+from pathlib import Path
+from typing import Union
 
 log = logging.getLogger(__file__)
+
+
+def make_tape_client(token: str, check=True, robust: bool=True) -> Session:
+    if token is None or token == "":
+        raise Exception("Tape API key not given or key is empty.")
+    session = Session()
+    session.headers.update({
+        'authorization': f'Bearer {token}',
+    })
+    return session
 
 
 def try_environment_token():
@@ -16,10 +28,17 @@ def try_environment_token():
         log.info('Environment variable TAPE_API_KEY is not set.')
         return None
     log.info('Loading OAuth2 token from environment.')
-    return {
-      "access_token": str(access_token),
-      "token_type": "bearer"
-    }
+    return str(access_token)
+
+
+def load_token(creds_file: Union[Path, str]) -> str:
+    """
+    Load the token from the file name tape_credentials.txt (unless specified otherwise)
+    """
+    token = ""
+    with open(creds_file, mode="r", encoding='utf-8') as fh:
+        token = fh.readline()
+    return token.strip()
 
 
 def create_tape_session(credentials_file=None, credentials=None, check=True, robust=False):
@@ -29,14 +48,10 @@ def create_tape_session(credentials_file=None, credentials=None, check=True, rob
     else:
         token = try_environment_token()
     if token is None:
-        log.info('Loading OAuth2 token from credentials file.')
+        log.info('Loading Tape API key from credentials file.')
         if credentials_file is None:
-            token = podio_auth.load_token()
+            token = load_token('tape_credentials.txt')
         else:
-            token = podio_auth.load_token(credentials_file)
-    podio = podio_auth.make_client(token['client_id'], token, check=check, enable_robustness=robust)
-    return podio
-
-
-def create_app_auth_session(client_id:str, client_secret:str, app_id:int, app_token:str, robust=False):
-    return podio_auth.make_app_auth_client(client_id, client_secret, app_id, app_token, robust=robust)
+            token = load_token(credentials_file)
+    tape = make_tape_client(token, check=check, robust=robust)
+    return tape
