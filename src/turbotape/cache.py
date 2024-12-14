@@ -8,14 +8,13 @@ except ImportError:
     from collections import Iterable # noqa
 
 from typing import Union
-from turbopod.helpers import iterate_resource
-from turbopod.items import Item
-from turbopod.podio_auth import PodioOAuth2Session
+from turbotape.helpers import iterate_resource
+from turbotape.records import Record
 
 log = logging.getLogger(__name__)
 
 
-class CachedItem(Item):
+class CachedItem(Record):
 
     def __init__(self, item_storage, item_data):
         self._item_storage = item_storage
@@ -59,10 +58,10 @@ class CachedItemStorage(object):
     >>> factory.get_item(12929939)
     """
 
-    def __init__(self, conn:sqlite3.Connection, podio:PodioOAuth2Session):
+    def __init__(self, conn:sqlite3.Connection, tape_session):
         self.app_configs = {}
         self.conn = conn
-        self.podio = podio
+        self.podio = tape_session
         self.cache_configs = {}
 
     def _find_item_sql(self, sql, parameters):
@@ -152,7 +151,7 @@ class CachedItemStorage(object):
         table_name = f'podio_app_{app_id}'
         extra_fields = self.cache_configs[table_name]['extra_fields']
         natural_key_list = self.cache_configs[table_name]['natural_key']
-        resp = self.podio.post(f'https://api.podio.com/item/app/{app_id:d}/',
+        resp = self.podio.post(f'https://api.tapeapp.com/v1/record/app/{app_id:d}/',
                                json={'fields': item_values})
         resp.raise_for_status()
         item_data = resp.json()
@@ -166,7 +165,7 @@ class CachedItemStorage(object):
         try:
             return self.app_configs[podio_app_id]
         except KeyError:
-            resp = self.podio.get(f'https://api.podio.com/app/{podio_app_id:d}/')
+            resp = self.podio.get(f'https://api.tapeapp.com/v1/app/{podio_app_id:d}/')
             resp.raise_for_status()
             config = resp.json()
             self.app_configs[int(podio_app_id)] = config

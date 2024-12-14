@@ -2,7 +2,7 @@ import json
 import os
 from unittest import TestCase
 
-from tetrapod.cache import (
+from turbotape.cache import (
     CachedItemStorage
 )
 

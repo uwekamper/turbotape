@@ -1,8 +1,7 @@
 import json
 import os
-from unittest import TestCase
 
-from tetrapod.helpers import (
+from turbotape.helpers import (
     iterate_array,
     iterate_resource,
     intersection,
@@ -10,23 +9,19 @@ from tetrapod.helpers import (
 )
 
 
-class TestIterateArray(TestCase):
-    def setUp(self):
-        pass
+class TestIterateArray:
 
     def test_iterate_array(self):
         pass
 
 
-class TestIterateResource(TestCase):
-    def setUp(self):
-        pass
+class TestIterateResource:
 
     def test_iterate_resource(self):
         pass
 
 
-class TestSetOpsResource(TestCase):
+class TestSetOpsResource:
 
     def test_intersection(self):
         res = intersection([1, 2], [2, 3], [2, 4, 5])

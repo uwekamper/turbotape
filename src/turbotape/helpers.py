@@ -5,7 +5,7 @@ import mimetypes
 from collections import UserList
 from functools import reduce
 
-from turbopod.items import Item
+from turbotape.records import Record
 
 log = logging.getLogger(__name__)
 
@@ -141,15 +141,15 @@ class SearchableList(UserList):
     def pop(self, s=None):
         raise RuntimeError("Deletion not allowed")
 
-    def append(self, item: Item) -> None:
+    def append(self, item: Record) -> None:
         index = len(self.data)  # index of appended element at end of list
         self.make_searchable(index, item)
         super().append(item)
 
-    def insert(self, i: int, item: Item) -> None:
+    def insert(self, i: int, item: Record) -> None:
         raise RuntimeError("Insert would mess up the search idx. Use .append()")
 
-    def make_searchable(self, index: int, item: Item):
+    def make_searchable(self, index: int, item: Record):
         """Create the searchable values for the item in the search index."""
         for field in item.item_data['fields']:
             external_id = field['external_id']
@@ -228,7 +228,7 @@ class SearchableList(UserList):
             pass
         return search_results
 
-    def search_first(self, external_id: str, look_for: str) -> Item:
+    def search_first(self, external_id: str, look_for: str) -> Record:
         """Do a search but only return the first found item or None if not found."""
         items_found = self.search(external_id, look_for)
         if len(items_found) < 1:
@@ -241,8 +241,8 @@ def load_complete_app(podio, app_id):
     url = f'https://api.podio.com/item/app/{app_id}/filter/'
 
     payload = SearchableList()
-    for item in iterate_resource(podio, url, 'POST', limit=250):
-        payload.append(Item(item))
+    for record in iterate_resource(podio, url, 'POST', limit=250):
+        payload.append(Record(record))
 
     return payload
 

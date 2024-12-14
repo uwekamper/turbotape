@@ -25,49 +25,43 @@ def test_record():
 
 class TestCategoryMediator:
 
-    @pytest.fixture
-    def my_field(test_record) -> dict:
+    @pytest.fixture()
+    def my_field(self, test_record) -> dict:
         field = test_record['fields'][7]
 
-    @pytest.fixture
-    def my_mediatior():
+    @pytest.fixture()
+    def my_mediatior(self) -> CategoryMediator:
         mediator = CategoryMediator()
         return mediator
 
     def test_update_category_str(self, my_mediator):
         value = 'Accepted'
         res = my_mediator.update(self.field, value)
-        self.assertEqual(
-            [{'value': {
+        assert res == [
+            {'value': {
                 'status': 'active',
                 'text': 'Accepted',
                 'id': 2,
                 'color': 'DCEBD8'}
-            }],
-            res
-        )
+            }
+        ]
 
     def test_fetch_category(self, my_mediator):
-        self.assertEqual(
-            [(1, "Entered"), (2, "Accepted"), (3, "Rejected")],
+        assert \
+            [(1, "Entered"), (2, "Accepted"), (3, "Rejected")] == \
             my_mediator.fetch(self.field, field_param='choices')
-        )
-        self.assertEqual(
-            "Accepted",
+        assert \
+            "Accepted" == \
             my_mediator.fetch(self.field)
-        )
-        self.assertEqual(
-            "Accepted",
+        assert \
+            "Accepted" == \
             my_mediator.fetch(self.field, field_param='active')['text']
-        )
-        self.assertEqual(
-            2,
+        assert \
+            2 == \
             my_mediator.fetch(self.field, field_param='active')['id']
-        )
-        self.assertEqual(
-            "DCEBD8",
+        assert \
+            "DCBD8" == \
             my_mediator.fetch(self.field, field_param='active')['color']
-        )
 
 
     def test_as_podio_dict(self, my_mediator):
@@ -175,37 +169,35 @@ class TestFetchField:
         )
 
 
-class TestItem(TestCase):
+class TestRecord:
 
-    def setUp(self):
-        json_path = os.path.join(os.path.dirname(__file__), 'test_item.json')
-        with open(json_path, mode='r') as fh:
-            self.test_item = json.load(fh)
-        self.item = Item(item_data=self.test_item)
+    @pytest.fixture
+    def my_record(self, test_record: dict) -> Record:
+        return Record(test_record)
 
-    def test__getitem__(self):
+    def test__getitem__(self, my_record):
         self.assertEqual(
             "Bow of boat",
-            self.item['name']
+            my_record['name']
         )
 
-    def test__setitem__(self):
-        self.assertEqual(0, len(self.item._tainted))
-        self.item['name'] = 'Bow of ship'
+    def test__setitem__(self, my_record):
+        self.assertEqual(0, len(my_record._tainted))
+        my_record['name'] = 'Bow of ship'
         # after setting the value, the number of tainted fields should go up.
-        self.assertEqual(1, len(self.item._tainted))
-        res = self.item.as_podio_dict(fields=self.item._tainted)
+        self.assertEqual(1, len(my_record._tainted))
+        res = my_record.as_podio_dict(fields=my_record._tainted)
         self.assertEqual("Bow of ship", res['name'])
 
-    def test__setitem__textfield_none(self):
-        self.assertEqual(0, len(self.item._tainted))
-        self.item['name'] = None
+    def test__setitem__textfield_none(self, my_record):
+        self.assertEqual(0, len(my_record._tainted))
+        my_record['name'] = None
         # after setting the value, the number of tainted fields should go up.
-        self.assertEqual(1, len(self.item._tainted))
-        res = self.item.as_podio_dict(fields=self.item._tainted)
+        self.assertEqual(1, len(my_record._tainted))
+        res = my_record.as_podio_dict(fields=my_record._tainted)
         self.assertEqual([], res['name'])
 
-    def test_as_podio_dict(self):
-        res = self.item.as_podio_dict(fields=['name'])
+    def test_as_podio_dict(self, my_record):
+        res = my_record.as_podio_dict(fields=['name'])
         self.assertEqual("Bow of boat", res['name'])
 
