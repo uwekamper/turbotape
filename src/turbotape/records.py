@@ -312,7 +312,12 @@ class TextMediator(FieldMediator):
         return values
 
     def fetch(self, field, field_param=None):
-        if field_param is None:
+        if field_param == 'unformatted':
+            values = field.get('values')
+            if values:
+                for value in values:
+                    return value['unformatted_value']
+        elif field_param is None:
             values = field.get('values')
             if values:
                 for value in values:
@@ -366,14 +371,12 @@ class CategoryMediator(FieldMediator):
     def fetch(self, field, field_param=None):
         if field_param == 'choices':
             options = field['config']['settings']['options']
-            # inactive options are not show to the user
-            return [(opt['id'], opt['text']) for opt in options if opt['status'] == 'active']
+            return [(opt['id'], opt['text']) for opt in options]
         # The same as '__choices' but instead of a list of tuples it returns a dictionary
         # that contains the choices and choice ID numbers.
         elif field_param == 'choices_dict':
             options = field['config']['settings']['options']
-            # inactive options are not show to the user
-            return {opt['text']: opt['id'] for opt in options if opt['status'] == 'active'}
+            return {opt['text']: opt['id'] for opt in options}
         elif field_param == 'active':
             val = field.get('values', [None])[0]
             if val is not None:
@@ -491,9 +494,6 @@ def get_field_from_podio_json_list(item_json, external_id, app_config=None):
     :param external_id:
     :return:
     """
-    if '_' in external_id:
-        external_id = external_id.replace('_', '-')
-
     fields = item_json.get('fields', [])
 
     for field in fields:

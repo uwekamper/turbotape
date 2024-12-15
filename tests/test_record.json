@@ -5,8 +5,8 @@
   "title": "UI bug on login screen (Sample)",
   "created_on": "2024-11-07 13:06:50",
   "created_on_utc": "2024-11-07 12:06:50",
-  "last_modified_on": "2024-11-07 13:06:50",
-  "last_modified_on_utc": "2024-11-07 12:06:50",
+  "last_modified_on": "2024-12-15 14:03:59",
+  "last_modified_on_utc": "2024-12-15 13:03:59",
   "deleted_on": null,
   "deleted_on_utc": null,
   "app": {
@@ -17,9 +17,9 @@
     "workspace_id": 13988,
     "workspace": {
       "workspace_id": 13988,
-      "external_id": "demo-agile-software-development",
+      "external_id": "zz-demo-agile-software-development",
       "org_id": 2162,
-      "name": "Demo Agile Software Development"
+      "name": "zz Demo Agile Software Development"
     },
     "config": {
       "name": "Backlog",
@@ -28,9 +28,9 @@
       "workspace_id": 13988,
       "workspace": {
         "workspace_id": 13988,
-        "external_id": "demo-agile-software-development",
+        "external_id": "zz-demo-agile-software-development",
         "org_id": 2162,
-        "name": "Demo Agile Software Development"
+        "name": "zz Demo Agile Software Development"
       }
     }
   },
@@ -249,6 +249,31 @@
       ]
     },
     {
+      "field_id": 483834,
+      "external_id": "description",
+      "label": "Description",
+      "type": "text",
+      "field_type": "multi_text",
+      "config": {
+        "label": "Description",
+        "slug": "description",
+        "external_id": "description",
+        "show_description": false,
+        "required": false,
+        "always_hidden": false,
+        "hidden_if_empty": false,
+        "settings": {
+          "formatted": true
+        }
+      },
+      "values": [
+        {
+          "value": "<h1>Description Headline</h1><p>This is a descriptive text</p>",
+          "unformatted_value": "Description HeadlineThis is a descriptive text"
+        }
+      ]
+    },
+    {
       "field_id": 483840,
       "external_id": "sub_tasks",
       "label": "Sub-Tasks",
@@ -324,9 +349,9 @@
             "size": 66349,
             "mimetype": "image/png",
             "name": "login_ui_bug_screenshot.png",
-            "link": "https://s3.eu-central-1.amazonaws.com/tape-attachments/bcf3ccf1a24ca5c0da79fde10dac97?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVNOAIV5JPIBLTKIM%2F20241214%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20241214T143549Z&X-Amz-Expires=518400&X-Amz-Signature=ab878df29b51bad5acd9fa14b8dcabb7a3222371d627c14457a0d3a4d21879ef&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3Bfilename%3D%22login_ui_bug_screenshot.png%22&response-content-type=charset%3Dutf-8",
-            "download_url": "https://s3.eu-central-1.amazonaws.com/tape-attachments/bcf3ccf1a24ca5c0da79fde10dac97?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVNOAIV5JPIBLTKIM%2F20241214%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20241214T143549Z&X-Amz-Expires=518400&X-Amz-Signature=ab878df29b51bad5acd9fa14b8dcabb7a3222371d627c14457a0d3a4d21879ef&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3Bfilename%3D%22login_ui_bug_screenshot.png%22&response-content-type=charset%3Dutf-8",
-            "view_url": "https://s3.eu-central-1.amazonaws.com/tape-attachments/bcf3ccf1a24ca5c0da79fde10dac97?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVNOAIV5JPIBLTKIM%2F20241214%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20241214T143549Z&X-Amz-Expires=518400&X-Amz-Signature=cd5f4ff0e40c24b5cf17639382d8b3e7b30c84e25b5e2f492f42a3229fbe4318&X-Amz-SignedHeaders=host&response-content-type=image%2Fpng%3B%20charset%3Dutf-8",
+            "link": "https://s3.eu-central-1.amazonaws.com/tape-attachments/bcf3ccf1a24ca5c0da79fde10dac97?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVNOAIV5JPIBLTKIM%2F20241215%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20241215T130503Z&X-Amz-Expires=518400&X-Amz-Signature=f3b4b5a0899c30eafc48e4517f17445f80c5f2d815ade9898f63b339ac57716e&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3Bfilename%3D%22login_ui_bug_screenshot.png%22&response-content-type=charset%3Dutf-8",
+            "download_url": "https://s3.eu-central-1.amazonaws.com/tape-attachments/bcf3ccf1a24ca5c0da79fde10dac97?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVNOAIV5JPIBLTKIM%2F20241215%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20241215T130503Z&X-Amz-Expires=518400&X-Amz-Signature=f3b4b5a0899c30eafc48e4517f17445f80c5f2d815ade9898f63b339ac57716e&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3Bfilename%3D%22login_ui_bug_screenshot.png%22&response-content-type=charset%3Dutf-8",
+            "view_url": "https://s3.eu-central-1.amazonaws.com/tape-attachments/bcf3ccf1a24ca5c0da79fde10dac97?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVNOAIV5JPIBLTKIM%2F20241215%2Feu-central-1%2Fs3%2Faws4_request&X-Amz-Date=20241215T130503Z&X-Amz-Expires=518400&X-Amz-Signature=af3a51b3093adc1ede0e759f2e835070b4579e3f2a795a80f6fbd363c33fbb77&X-Amz-SignedHeaders=host&response-content-type=image%2Fpng%3B%20charset%3Dutf-8",
             "created_by": null,
             "created_on": "2021-10-24 13:40:37"
           }
@@ -374,17 +399,32 @@
   },
   "last_modified_by": {
     "mail": [
-      "rico@diekollaborateure.com"
+      "uwe@digitale-revoluzzer.de"
     ],
-    "id": 188312,
-    "user_id": 188312,
+    "id": 189372,
+    "user_id": 189372,
     "org_id": 2162,
-    "name": "Kollaborateur",
+    "name": "Uwe Kamper",
     "type": "user",
-    "phone": "+491728844433",
-    "email": "rico@diekollaborateure.com"
+    "email": "uwe@digitale-revoluzzer.de"
   },
   "revisions": [
+    {
+      "created_by": {
+        "id": 189372,
+        "mail": [
+          "uwe@digitale-revoluzzer.de"
+        ],
+        "user_id": 189372,
+        "name": "Uwe Kamper",
+        "org_id": 2162,
+        "type": "user"
+      },
+      "created_on": "2024-12-15 13:03:59",
+      "record_id": 111340631,
+      "revision": 1,
+      "type": "update"
+    },
     {
       "created_by": {
         "id": 188312,
@@ -404,19 +444,19 @@
   ],
   "current_revision": {
     "created_by": {
-      "id": 188312,
+      "id": 189372,
       "mail": [
-        "rico@diekollaborateure.com"
+        "uwe@digitale-revoluzzer.de"
       ],
-      "user_id": 188312,
-      "name": "Kollaborateur",
+      "user_id": 189372,
+      "name": "Uwe Kamper",
       "org_id": 2162,
       "type": "user"
     },
-    "created_on": "2024-11-07 12:06:50",
+    "created_on": "2024-12-15 13:03:59",
     "record_id": 111340631,
-    "revision": 0,
-    "type": "creation"
+    "revision": 1,
+    "type": "update"
   },
   "initial_revision": {
     "created_by": {

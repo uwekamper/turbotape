@@ -67,107 +67,65 @@ class TestCategoryMediator:
 
     def test_as_podio_dict(self, my_mediator):
         res = my_mediator.as_podio_dict(self.field)
-        self.assertEqual([2], res)
+        assert [2] == res
 
 
 class TestFetchField:
 
-    def test_get_field_not_found(self):
-        self.assertEqual(
-            None,
-            fetch_field('does_not_exist', self.test_item)
-        )
+    def test_get_field_not_found(self, test_record):
+        assert None == fetch_field('does_not_exist', test_record)
 
-    def test_get_field_with_underscore(self):
-        self.assertEqual(
-            'Go',
-            fetch_field('do_it', self.test_item)
-        )
+    def test_get_field_with_underscore(self, test_record):
+        # Dashes in external field where a problem when using them in e.g. 
+        # template engines like Jinja2: {{ item.story_points }} would work 
+        # while {{ item.story-points }} is illegal. Podio used '-' as a word 
+        # seperator by default in external IDs (A field with the label 
+        # "Story points" will be called "story-points" in Podio). Tape does the
+        # "right" thing from  the beginning (using '_' instead of '-').
+        assert '4.0000' == fetch_field('story_points', test_record)
 
-    def test_get_text_field(self):
-        self.assertEqual(
-            "Bow of boat",
-            fetch_field('name', self.test_item)
-        )
+    def test_get_text_field(self, test_record):
+        assert "UI bug on login screen (Sample)" == fetch_field('title', test_record)
 
-    def test_get_text_field_multiline(self):
-        self.assertEqual(
-            "<p>There's something about knowing the bow from the stern that "
-            "makes sense in regard to this project.</p>",
-            fetch_field('description', self.test_item)
-        )
+    def test_get_text_field_multiline(self, test_record):
+        assert "<h1>Description Headline</h1><p>This is a descriptive text</p>" \
+            == fetch_field('description', test_record)
+        assert "Description HeadlineThis is a descriptive text" \
+            == fetch_field('description__unformatted', test_record)
 
-    def test_fetch_category_field(self):
-        self.assertEqual(
-            [(1, "Entered"), (2, "Accepted"), (3, "Rejected")],
-            fetch_field('status2__choices', self.test_item)
-        )
-        self.assertEqual(
-            "Accepted",
-            fetch_field('status2', self.test_item)
-        )
-        self.assertEqual(
-            "Accepted",
-            fetch_field('status2__active', self.test_item)['text']
-        )
-        self.assertEqual(
-            2,
-            fetch_field('status2__active', self.test_item)['id']
-        )
-        self.assertEqual(
-            "DCEBD8",
-            fetch_field('status2__active', self.test_item)['color']
-        )
+    def test_fetch_category_field(self, test_record):
+        # Get all choices
+        assert [(48992, "Not Started"), (48994, "In Progress"), (48993, "Complete")]\
+            == fetch_field('status__choices', test_record)
+        # Current status
+        assert "In Progress" == fetch_field('status', test_record)
+        # Get the currently selected option with text, ID and colour value.
+        assert "In Progress" == fetch_field('status__active', test_record)['text']
+        assert 48994 == fetch_field('status__active', test_record)['id']
+        assert "DEA700" == fetch_field('status__active', test_record)['color']
 
-    def test_fetch_app_field(self):
-        self.assertEqual(
-            [503454054],
-            fetch_field('projects', self.test_item)
-        )
-        # self.assertEqual(
-        #     503454054,
-        #    fetch_field('projects__first', self.test_item)
-        #)
-        #self.assertEqual(
-        #    503454054,
-        #    fetch_field('projects__last', self.test_item)
-        #)
+    def test_fetch_app_field(self, test_record):
+        assert [503454054] == fetch_field('projects', test_record)
+        # TODO: Make these work, too.
+        # assert 503454054 == fetch_field('projects__first', test_record)
+        # assert 503454054 == fetch_field('projects__last', test_record)
 
-    def test_fetch_calculation_field(self):
-        self.assertEqual(
-            "Hello,  John Doe",
-            fetch_field('calc', self.test_item)
-        )
+    def test_fetch_calculation_field(self, test_record):
+        assert "Hello,  John Doe" == fetch_field('calc', test_record)
 
-    def test_fetch_date_field(self):
-        self.assertEqual(
-            '2018-07-27 01:00:00',
-            fetch_field('date', self.test_item)
-        )
-        self.assertEqual(
-            datetime.datetime(2018, 7, 27, 1, 0),
-            fetch_field('date__datetime', self.test_item)
-        )
-        
-        self.assertEqual(
-            '2018-07-27 01:00:00',
-            fetch_field('date__start', self.test_item)
-        )
+    def test_fetch_date_field(self, test_record):
+        assert '2018-07-27 01:00:00' == fetch_field('date', test_record)
+        assert datetime.datetime(2018, 7, 27, 1, 0) == fetch_field('date__datetime', test_record)
+        assert '2018-07-27 01:00:00' == fetch_field('date__start', test_record)
+
         # item[‘date__start_datetime’]
-        self.assertEqual(
-            datetime.datetime(2018, 7, 27, 1, 0),
-            fetch_field('date__start_datetime', self.test_item)
-        )
-        self.assertEqual(
-            datetime.datetime(2018, 7, 28, 1, 0),
-            fetch_field('date__end_datetime', self.test_item)
-        )
+        assert datetime.datetime(2018, 7, 27, 1, 0) == fetch_field('date__start_datetime', test_record)
+        assert datetime.datetime(2018, 7, 28, 1, 0) == fetch_field('date__end_datetime', test_record)
 
-    def test_fetch_embed_field(self):
-        self.assertEqual(
-            "http://www.newsletter-webversion.de/?c=0-v0yw-0-11xa&utm_source=newsletter&utm_medium=email&utm_campaign=02%2F2017+DT&newsletter=02%2F2017+DT",
-            fetch_field('embed', self.test_item)
-        )
+    def test_fetch_embed_field(self, test_record):
+        assert \
+            "http://www.newsletter-webversion.de/?c=0-v0yw-0-11xa&utm_source=newsletter&utm_medium=email&utm_campaign=02%2F2017+DT&newsletter=02%2F2017+DT" \
+            == fetch_field('embed', test_record)
 
 
 class TestRecord:
@@ -177,28 +135,24 @@ class TestRecord:
         return Record(test_record)
 
     def test__getitem__(self, my_record):
-        self.assertEqual(
-            "Bow of boat",
-            my_record['name']
-        )
+        assert "Bow of boat" == my_record['name']
 
     def test__setitem__(self, my_record):
-        self.assertEqual(0, len(my_record._tainted))
+        assert 0 == len(my_record._tainted)
         my_record['name'] = 'Bow of ship'
         # after setting the value, the number of tainted fields should go up.
-        self.assertEqual(1, len(my_record._tainted))
+        assert 1 == len(my_record._tainted)
         res = my_record.as_podio_dict(fields=my_record._tainted)
-        self.assertEqual("Bow of ship", res['name'])
+        assert "Bow of ship" == res['name']
 
     def test__setitem__textfield_none(self, my_record):
-        self.assertEqual(0, len(my_record._tainted))
+        assert 0 == len(my_record._tainted)
         my_record['name'] = None
         # after setting the value, the number of tainted fields should go up.
-        self.assertEqual(1, len(my_record._tainted))
+        assert 1 == len(my_record._tainted)
         res = my_record.as_podio_dict(fields=my_record._tainted)
-        self.assertEqual([], res['name'])
+        assert [] == res['name']
 
     def test_as_podio_dict(self, my_record):
         res = my_record.as_podio_dict(fields=['name'])
-        self.assertEqual("Bow of boat", res['name'])
-
+        assert "Bow of boat" == res['name']
