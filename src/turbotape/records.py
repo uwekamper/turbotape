@@ -1,5 +1,6 @@
 import datetime
 import logging
+import os
 from collections.abc import Mapping
 from decimal import Decimal
 from typing import Union
@@ -647,11 +648,22 @@ class BaseRecord(Mapping):
 
     @property
     def item_id(self):
-        return self.get_item_data()['item_id']
+        """
+        We keep this here to be compatible with legacy code written for Podio. 
+        """
+        return self.get_item_data()['record_id']
+
+    @property
+    def record_id(self):
+        return self.get_item_data()['record_id']
 
     @property
     def item_id__str(self):
-        return '%d' % self.item_id
+        return '%d' % self.record_id
+    
+    @property
+    def record_id__str(self):
+        return '%d' % self.record_id
 
     @property
     def unique_id(self):
@@ -663,7 +675,15 @@ class BaseRecord(Mapping):
 
     @property
     def link(self):
-        return self.get_item_data()['link']
+        """
+        Returns a link to the record. Make sure TAPE_ORG_NAME is set as
+        an environment variable.
+        If TAPE_ORG_NAME="kollaborateure", then the link will look like this:
+            https://tapeapp.com/kollaborateure/record/123456789
+        """
+        org_name = os.environ.get('TAPE_ORG_NAME', 'TAPE_ORG_NAME').strip()
+        url = f'https://tapeapp.com/{org_name}/record/{self.record_id}'
+        return url
     
     @property
     def files(self):

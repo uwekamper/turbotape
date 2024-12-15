@@ -128,11 +128,23 @@ class TestFetchField:
             == fetch_field('embed', test_record)
 
 
+@pytest.fixture
+def the_org_name():
+    os.environ['TAPE_ORG_NAME'] = 'kollaborateure'
+    return os.environ
+
+
 class TestRecord:
 
     @pytest.fixture
     def my_record(self, test_record: dict) -> Record:
         return Record(test_record)
+    
+    def test_record_id(self, my_record):
+        assert 111340631 == my_record.record_id
+        assert 111340631 == my_record.item_id
+        assert '111340631' == my_record.record_id__str
+        assert '111340631' == my_record.record_id__str
     
     def test_files(self, my_record):
         """
@@ -147,6 +159,21 @@ class TestRecord:
             assert any_res.get('download_url') is not None
             assert any_res.get('view_url') is not None
 
+    def test_link_org_name_not_defined(self, my_record):
+        """
+        Try if we can get ALL files attached to a record somewhere.
+        """
+        assert f'https://tapeapp.com/TAPE_ORG_NAME/record/111340631' \
+                == my_record.link
+
+    @pytest.mark.skip(reason="enable when env var setting works inside one test")
+    def test_link(self, my_record, the_org_name):
+        """
+        Try if we can get ALL files attached to a record somewhere.
+        """
+        assert f'https://tapeapp.com/TAPE_ORG_NAME/record/111340631' \
+                == my_record.link
+    
     def test__getitem__(self, my_record):
         assert "Bow of boat" == my_record['name']
 
