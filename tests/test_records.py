@@ -133,6 +133,19 @@ class TestRecord:
     @pytest.fixture
     def my_record(self, test_record: dict) -> Record:
         return Record(test_record)
+    
+    def test_files(self, my_record):
+        """
+        Try if we can get ALL files attached to a record somewhere.
+        """
+        res = my_record.files
+        assert len(res) == 4
+        assert res[0]['file_id'] == 4388
+        assert res[0]['mimetype'] == 'image/png'
+        for any_res in res:
+            assert any_res.get('link') is not None
+            assert any_res.get('download_url') is not None
+            assert any_res.get('view_url') is not None
 
     def test__getitem__(self, my_record):
         assert "Bow of boat" == my_record['name']

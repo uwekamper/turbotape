@@ -594,6 +594,29 @@ def fetch_podio_dict(field_descriptor, item_json, app_config=None):
     return mediator.as_podio_dict(field)
 
 
+def fetch_all_files(record_json):
+    """
+    Get a list of all files (regardless of image or file files) that are attached
+    to one record. The result looks like this:
+    [{
+        'file_id': 1234,
+        'size': 66349,
+        'mimetype': 'image/png',
+        'name': 'login_ui_bug_screenshot.png',
+        'link': 'https://s3.eu-central-1.amazonaws.com/...',
+        'download_url': 'https://s3.eu-central-1.amazonaws.com/...',
+        'created_by': None,
+        'created_on': '2021-10-24 13:40:37'
+    }, {...}]
+    """
+    all_files = []
+    fields = record_json.get("fields", [])
+    for field in fields:
+        if field['type'] == 'file':
+            all_files += [el['value'] for el in field['values']]
+    return all_files
+
+
 class BaseRecord(Mapping):
     def __getitem__(self, key):
         return fetch_field(key, self.get_item_data(), self.get_app_config())
@@ -641,6 +664,10 @@ class BaseRecord(Mapping):
     @property
     def link(self):
         return self.get_item_data()['link']
+    
+    @property
+    def files(self):
+        return fetch_all_files(self.get_item_data())
 
     def as_podio_dict(self, fields=None):
         """
