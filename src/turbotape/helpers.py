@@ -255,7 +255,9 @@ def upload_file(tape_session, record_id, file_field, raw_data, new_file_name):
     log.info(f"Upload response is: {upload_resp.status_code}, "
              f"content(-repr): {repr(upload_resp.content)}")
     upload_resp.raise_for_status()
-    new_file_id = upload_resp.json()['file_id']
+    upload_resp_content = upload_resp.json()
+    new_file_id = upload_resp_content['file_id']
+
     payload = {
         'fields': {
             file_field: new_file_id
@@ -267,3 +269,4 @@ def upload_file(tape_session, record_id, file_field, raw_data, new_file_name):
     attach_resp.raise_for_status()
     log.info(f"Attach response is: {attach_resp.status_code}, "
              f"content(-repr): {repr(attach_resp.content)}")
+    return upload_resp_content
