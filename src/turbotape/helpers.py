@@ -247,26 +247,31 @@ def load_complete_app(podio, app_id):
     return payload
 
 
-def upload_file(tape_session, record_id, file_field, raw_data, new_file_name):
-    log.info(f'Uploading and attaching file {new_file_name} to record {record_id}')
+def upload_file(tape_session, record_id, file_field, raw_data, new_file_name, replace_file_field=True):
+    """
+    If replace_file_field == True, the file field will be replaced in-place.
+    """
+    if replace_file_field is True:
+        log.info(f'Uploading and attaching/replacing file {new_file_name} to record {record_id}')
+    else:
+        log.info(f'Uploading file {new_file_name}')
     files = {'file': (new_file_name, raw_data, mimetypes.guess_type(new_file_name)[0])}
     data = {'filename': new_file_name.encode('utf-8')}
     upload_resp = tape_session.post('https://api.tapeapp.com/v1/file/upload', data=data, files=files)
-    log.info(f"Upload response is: {upload_resp.status_code}, "
+    log.debug(f"Upload response is: {upload_resp.status_code}, "
              f"content(-repr): {repr(upload_resp.content)}")
     upload_resp.raise_for_status()
     upload_resp_content = upload_resp.json()
     new_file_id = upload_resp_content['file_id']
 
-    payload = {
-        'fields': {
-            file_field: new_file_id
+    if replace_file_field is True:
+        payload = {
+            'fields': {
+                file_field: new_file_id
+            }
         }
-    }
-    attach_resp = tape_session.put('https://api.tapeapp.com/v1/record/%d' % record_id, json=payload)
-    log.info(f"Attachment response is: {upload_resp.status_code}, "
-             f"content(-repr): {repr(upload_resp.content)}")
-    attach_resp.raise_for_status()
-    log.info(f"Attach response is: {attach_resp.status_code}, "
-             f"content(-repr): {repr(attach_resp.content)}")
+        attach_resp = tape_session.put('https://api.tapeapp.com/v1/record/%d' % record_id, json=payload)
+        log.debug(f"Attachment response is: {upload_resp.status_code}, "
+                f"content(-repr): {repr(upload_resp.content)}")
+        attach_resp.raise_for_status()
     return upload_resp_content
