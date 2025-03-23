@@ -1,6 +1,6 @@
 [project]
 name = "turbotape"
-version = "0.0.8"
+version = "0.0.9"
 authors = [
   { name="Uwe Kamper", email="me@uwekamper.de" },
 ]
@@ -27,7 +27,7 @@ build-backend = "hatchling.build"
 
 [tool.poetry]
 name = "turbotape"
-version = "0.0.8"
+version = "0.0.9"
 description = "A utility package for using the public API of tapeapp.com with Python."
 authors = ["Uwe Kamper <me@uwekamper.de>"]
 readme = "README.md"
