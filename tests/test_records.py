@@ -166,12 +166,12 @@ class TestRecord:
         assert f'https://tapeapp.com/TAPE_ORG_NAME/record/111340631' \
                 == my_record.link
 
-    @pytest.mark.skip(reason="enable when env var setting works inside one test")
+    # @pytest.mark.skip(reason="enable when env var setting works inside one test")
     def test_link(self, my_record, the_org_name):
         """
         Try if we can get ALL files attached to a record somewhere.
         """
-        assert f'https://tapeapp.com/TAPE_ORG_NAME/record/111340631' \
+        assert f'https://tapeapp.com/kollaborateure/record/111340631' \
                 == my_record.link
     
     def test__getitem__(self, my_record):

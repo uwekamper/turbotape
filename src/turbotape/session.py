@@ -62,10 +62,11 @@ class TapeSession(requests.Session):
                 retry_counter -= 1
                 reset_time_raw = response.headers['X-Retry-Reset']
                 reset_time = datetime.datetime.strptime(reset_time_raw, "%Y-%m-%d %H:%M:%S")
-                reset_time.replace(tzinfo=datetime.timezone.utc)
+                # Create a time-zone aware version of the `X-Retry-Reset` time.
+                tz_reset_time = reset_time.replace(tzinfo=datetime.timezone.utc)
                 # Use max() to avoid negative wait times.
-                seconds = max((reset_time - datetime.datetime.now(datetime.timezone.utc)).total_seconds(), 1.0)
-                log.debug(f"429 Client Error: Too Many Requests, waiting till {reset_time} ({seconds + 1.0} s)")
+                seconds = max((tz_reset_time - datetime.datetime.now(datetime.timezone.utc)).total_seconds(), 1.0)
+                log.warning(f"HTTP 429 Client Error: Too Many Requests, waiting till {reset_time} ({seconds + 1.0} s)")
                 sleep(seconds + 1.0)
                 continue
 
